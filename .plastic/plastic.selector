@@ -1,0 +1,3 @@
+repository "Mage TD/Mage TD@6872733065366@cloud"
+  path "/"
+    smartbranch "/main"
