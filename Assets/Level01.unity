@@ -600,6 +600,9 @@ MonoBehaviour:
     ViewYSensitivity: 10
     ViewXInverted: 0
     ViewYInverted: 0
+    WalkingFowardSpeed: 4
+    WalkingBackwardSpeed: 6
+    WalkingStrafeSpeed: 6
   viewClampYMin: -70
   viewClampYMax: 80
 --- !u!143 &1071463866
