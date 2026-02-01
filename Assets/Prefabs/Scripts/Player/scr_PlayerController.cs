@@ -9,19 +9,21 @@ public class scr_PlayerController : MonoBehaviour
 {
     private CharacterController characterController;
     private DeafaultInputs defaultInput;
-    public Vector2 input_Movement;
-    public Vector2 input_View;
+    private Vector2 input_Movement;
+    private Vector2 input_View;
 
     private Vector3 newCameraRotation;
     private Vector3 newCharacterRotation;
 
     [Header("References")]
     public Transform cameraHolder;
+    public Transform feetTransform;
 
     [Header("Settings")]
     public PlayerSettingsModel playerSettings;
     public float viewClampYMin = -70;
     public float viewClampYMax = 80;
+    public LayerMask playerMask;
 
     [Header("Gravity")]
     public float gravityAmount;
@@ -31,6 +33,21 @@ public class scr_PlayerController : MonoBehaviour
     public Vector3 jumpingForce;
     private Vector3 jumpingForceVelocity;
 
+    [Header("Stance")]
+    public PlayerStance playerStance;
+    public float playerStanceSmoothing;
+    public CharacterStance playerStandStance;
+    public CharacterStance playerCrouchStance;
+    public CharacterStance playerProneStance;
+    private float stanceCheckErrorMargin = 0.05f;
+
+    private float cameraHeight;
+    private float cameraHeightVelocity;
+
+    private Vector3 stanceCapsuleCenterVelocity;
+    private float stanceCapsuleHeightVelocity;
+
+
     private void Awake()
     {
         defaultInput = new DeafaultInputs();
@@ -39,12 +56,17 @@ public class scr_PlayerController : MonoBehaviour
         defaultInput.Player.View.performed += e => input_View = e.ReadValue<Vector2>();
         defaultInput.Player.Jump.performed += e => Jump();
 
+        defaultInput.Player.Crouch.performed += e => Crouch();
+        defaultInput.Player.Prone.performed += e => Prone();
+
         defaultInput.Enable();
 
         newCameraRotation = cameraHolder.localRotation.eulerAngles;
         newCharacterRotation = transform.localRotation.eulerAngles;
 
         characterController = GetComponent<CharacterController>();
+
+        cameraHeight = cameraHolder.localPosition.y;
     }
 
     private void Update()
@@ -52,6 +74,7 @@ public class scr_PlayerController : MonoBehaviour
         CalculateView();
         CalculateMovement();
         CalculateJump();
+        CalculateStance();
     }
 
     private void CalculateView()
@@ -75,19 +98,14 @@ public class scr_PlayerController : MonoBehaviour
         newMovementSpeed = transform.TransformDirection(newMovementSpeed);
 
 
-        if(playerGravity > gravityMin & jumpingForce.y < 0.1f)
+        if(playerGravity > gravityMin)
         {
             playerGravity -= gravityAmount * Time.deltaTime;
         }
         
-        if(playerGravity < -1 && characterController.isGrounded)
+        if(playerGravity < -0.1f && characterController.isGrounded)
         {
-            playerGravity = -1;
-        }
-
-        if (jumpingForce.y > 0.1f)
-        {
-            playerGravity = 0;
+            playerGravity = -0.1f;
         }
 
         newMovementSpeed.y += playerGravity;
@@ -101,6 +119,28 @@ public class scr_PlayerController : MonoBehaviour
         jumpingForce = Vector3.SmoothDamp(jumpingForce, Vector3.zero, ref jumpingForceVelocity, playerSettings.JumpingFalloff);
     }
 
+    private void CalculateStance()
+    {
+        var currentStance = playerStandStance;
+
+        if (playerStance == PlayerStance.Crouch)
+        {
+            currentStance = playerCrouchStance;
+        }
+        else if (playerStance == PlayerStance.Prone)
+        {
+            currentStance = playerProneStance;
+        }
+
+
+        cameraHeight = Mathf.SmoothDamp(cameraHolder.localPosition.y, currentStance.CameraHeight, ref cameraHeightVelocity, playerStanceSmoothing);
+        cameraHolder.localPosition = new Vector3(cameraHolder.localPosition.x,cameraHeight,cameraHolder.localPosition.z);
+
+        characterController.height = Mathf.SmoothDamp(characterController.height, currentStance.StanceCollider.height, ref stanceCapsuleHeightVelocity, playerStanceSmoothing);
+        characterController.center = Vector3.SmoothDamp(characterController.center, currentStance.StanceCollider.center, ref stanceCapsuleCenterVelocity, playerStanceSmoothing);
+
+    }
+
     private void Jump()
     {        
         if (!characterController.isGrounded)
@@ -110,6 +150,47 @@ public class scr_PlayerController : MonoBehaviour
 
         //pulo
         jumpingForce = Vector3.up * playerSettings.JumpingHeight;
+        playerGravity = 0;
     }
+
+    private void Crouch()
+    {
+        if(playerStance == PlayerStance.Crouch)
+        {
+            if (StanceCheck(playerStandStance.StanceCollider.height))
+            {
+                return;
+            }
+
+            playerStance = PlayerStance.Stand;
+            return;
+        }
+
+        if (StanceCheck(playerCrouchStance.StanceCollider.height))
+        {
+            return;
+        }
+
+        playerStance = PlayerStance.Crouch;
+    }
+
+    private void Prone()
+    {
+        if(playerStance == PlayerStance.Prone)
+        {
+            playerStance = PlayerStance.Stand;
+            return;
+        }
+        playerStance = PlayerStance.Prone;
+    }
+
+    private bool StanceCheck(float stanceCheckheight)
+    {
+        var start = new Vector3(feetTransform.position.x, feetTransform.position.y + characterController.radius + stanceCheckErrorMargin, feetTransform.position.z);
+        var end = new Vector3(feetTransform.position.x, feetTransform.position.y - characterController.radius - stanceCheckErrorMargin + stanceCheckheight, feetTransform.position.z);
+
+        return Physics.CheckCapsule(start, end, characterController.radius, playerMask);
+    }
+
 }
  
