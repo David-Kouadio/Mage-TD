@@ -673,6 +673,11 @@ MonoBehaviour:
     WalkingStrafeSpeed: 3
     JumpingHeight: 5
     JumpingFalloff: 0.4
+    FallingSmoothing: 0.4
+    SpeedEffector: 1
+    CrouchSpeedEffector: 0.6
+    ProneSpeedEffector: 0.2
+    FallingSpeedEffector: 0.4
   viewClampYMin: -70
   viewClampYMax: 80
   playerMask:
