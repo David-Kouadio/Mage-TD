@@ -67,8 +67,11 @@ public static class scr_Models
         public float swayAmount;
         public bool SwayYInverted;
         public bool SwayXInverted;
-        public float swaySmoothning;
+        public float SwaySmoothning;
 
+        public float SwayResetSmoothning;
+        public float SwayClampX;
+        public float SwayClampY;
     }
 
     #endregion

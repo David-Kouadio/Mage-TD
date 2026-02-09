@@ -1535,7 +1535,10 @@ MonoBehaviour:
     swayAmount: 1
     SwayYInverted: 0
     SwayXInverted: 0
-    swaySmoothning: 1
+    SwaySmoothning: 0.1
+    SwayResetSmoothning: 0.1
+    SwayClampX: 4
+    SwayClampY: 4
 --- !u!4 &2030304708
 Transform:
   m_ObjectHideFlags: 0
