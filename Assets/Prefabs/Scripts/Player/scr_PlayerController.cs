@@ -9,7 +9,8 @@ public class scr_PlayerController : MonoBehaviour
 {
     private CharacterController characterController;
     private DeafaultInputs defaultInput;
-    private Vector2 input_Movement;
+    [HideInInspector]
+    public Vector2 input_Movement;
     [HideInInspector]
     public Vector2 input_View;
 

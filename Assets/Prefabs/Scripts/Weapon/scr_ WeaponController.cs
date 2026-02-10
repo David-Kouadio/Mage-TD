@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using static scr_Models;
 public class scr_WeaponController : MonoBehaviour
@@ -13,6 +14,11 @@ public class scr_WeaponController : MonoBehaviour
     Vector3 newWeaponRotationVelocity;
     Vector3 targetWeaponRotation;
     Vector3 targetWeaponRotationVelocity;
+
+    Vector3 newWeaponMovementRotation;
+    Vector3 newWeaponMovementRotationVelocity;
+    Vector3 targetWeaponMovementRotation;
+    Vector3 targetWeaponMovementRotationVelocity;
 
     private void Start()
     {
@@ -36,15 +42,18 @@ public class scr_WeaponController : MonoBehaviour
         
         targetWeaponRotation.x = Mathf.Clamp(targetWeaponRotation.x, -settings.SwayClampX, settings.SwayClampX);
         targetWeaponRotation.y = Mathf.Clamp(targetWeaponRotation.y, -settings.SwayClampY, settings.SwayClampY);
+        targetWeaponRotation.z = targetWeaponRotation.y;
 
         targetWeaponRotation = Vector3.SmoothDamp(targetWeaponRotation, Vector3.zero, ref targetWeaponRotationVelocity, settings.SwayResetSmoothning);
         newWeaponRotation = Vector3.SmoothDamp(newWeaponRotation, targetWeaponRotation, ref newWeaponRotationVelocity, settings.SwaySmoothning);
 
-        transform.localRotation = Quaternion.Euler(newWeaponRotation);
+        targetWeaponMovementRotation.z = settings.MovementSwayX * (settings.MovementSwayXInverted ? -playerController.input_Movement.x : playerController.input_Movement.x);
+        targetWeaponMovementRotation.x = settings.MovementSwayY * (settings.MovementSwayYInverted ? -playerController.input_Movement.y : playerController.input_Movement.y);
+
+        targetWeaponMovementRotation = Vector3.SmoothDamp(targetWeaponMovementRotation, Vector3.zero, ref targetWeaponMovementRotationVelocity, settings.MovementSwaySmoothning);
+        newWeaponMovementRotation = Vector3.SmoothDamp(newWeaponMovementRotation, targetWeaponMovementRotation, ref newWeaponMovementRotationVelocity, settings.MovementSwaySmoothning);
 
 
-
-
-
+        transform.localRotation = Quaternion.Euler(newWeaponRotation + newWeaponMovementRotation);
     }
 }
