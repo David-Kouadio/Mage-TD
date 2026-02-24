@@ -118,7 +118,7 @@ public class scr_PlayerController : MonoBehaviour
 
     private void SetIsFalling()
     {
-        
+        isFalling = (!isGrounded && characterController.velocity.magnitude >= playerSettings.isFallingSpeed);
     }
 
     #endregion
@@ -156,7 +156,7 @@ public class scr_PlayerController : MonoBehaviour
 
         // Effectors
 
-        if (!characterController.isGrounded)
+        if (!isGrounded)
         {
             playerSettings.SpeedEffector = playerSettings.FallingSpeedEffector;
         }
@@ -183,7 +183,7 @@ public class scr_PlayerController : MonoBehaviour
         verticalSpeed *= playerSettings.SpeedEffector;
         horizontalSpeed *= playerSettings.SpeedEffector;
 
-        newMovementSpeed = Vector3.SmoothDamp(newMovementSpeed, new Vector3(horizontalSpeed * input_Movement.x * Time.deltaTime, 0, verticalSpeed * input_Movement.y * Time.deltaTime), ref newMovementVelocity, characterController.isGrounded ? playerSettings.MovementSmoothing : playerSettings.FallingSmoothing);
+        newMovementSpeed = Vector3.SmoothDamp(newMovementSpeed, new Vector3(horizontalSpeed * input_Movement.x * Time.deltaTime, 0, verticalSpeed * input_Movement.y * Time.deltaTime), ref newMovementVelocity, isGrounded ? playerSettings.MovementSmoothing : playerSettings.FallingSmoothing);
         var movementSpeed = transform.TransformDirection(newMovementSpeed);
 
         if(playerGravity > gravityMin)
@@ -191,7 +191,7 @@ public class scr_PlayerController : MonoBehaviour
             playerGravity -= gravityAmount * Time.deltaTime;
         }
         
-        if(playerGravity < -0.1f && characterController.isGrounded)
+        if(playerGravity < -0.1f && isGrounded)
         {
             playerGravity = -0.1f;
         }
@@ -212,7 +212,7 @@ public class scr_PlayerController : MonoBehaviour
 
     private void Jump()
     {        
-        if (!characterController.isGrounded || playerStance == PlayerStance.Prone)
+        if (!isGrounded || playerStance == PlayerStance.Prone)
         {
             return;
         }
@@ -230,6 +230,8 @@ public class scr_PlayerController : MonoBehaviour
         //pulo
         jumpingForce = Vector3.up * playerSettings.JumpingHeight;
         playerGravity = 0;
+
+        currentWeapon.TriggerJump();
     }
 
     #endregion

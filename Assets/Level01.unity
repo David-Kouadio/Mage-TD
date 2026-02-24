@@ -643,7 +643,7 @@ Transform:
   m_GameObject: {fileID: 1071463860}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.488, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -687,7 +687,7 @@ MonoBehaviour:
     ProneSpeedEffector: 0.2
     FallingSpeedEffector: 0.4
     isGroundedRadius: 0.1
-    isFallingSpeed: 0
+    isFallingSpeed: 1
   viewClampYMin: -70
   viewClampYMax: 80
   playerMask:
@@ -1477,7 +1477,7 @@ Transform:
   m_GameObject: {fileID: 1544961928}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.898, z: 4.87}
+  m_LocalPosition: {x: -2.64, y: 0.34, z: 4.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
