@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Mage TD.slnx"
+    "dotnet.defaultSolution": "Mage-TD.slnx"
 }

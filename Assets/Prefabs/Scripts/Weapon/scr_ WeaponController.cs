@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 using static scr_Models;
@@ -27,6 +28,17 @@ public class scr_WeaponController : MonoBehaviour
 
     private float fallingDelay;
 
+    [Header("Weapon Breathing")]
+    public Transform weaponSwayObject;
+
+    public float swayAmountA = 1;
+    public float swayAmountB = 2;
+    public float swayScale = 600;
+    public float swayLerpSpeed = 14;
+
+    float swayTime;
+    Vector3 swayPosition;
+
     private void Start()
     {
         newWeaponRotation = transform.localRotation.eulerAngles;
@@ -46,6 +58,7 @@ public class scr_WeaponController : MonoBehaviour
 
         CalculateWeaponRotation();
         SetWeaponAnimation();
+        CalculateWeaponSway();
     }
 
     public void TriggerJump()
@@ -100,5 +113,26 @@ public class scr_WeaponController : MonoBehaviour
 
         weaponAnimator.SetBool("isSprinting", playerController.isSprinting);
         weaponAnimator.SetFloat("WeaponAnimationSpeed",playerController.weaponAnimatioSpeed);
+    }
+
+    private void CalculateWeaponSway()
+    {
+        var targetposition = LissajousCurve(swayTime, swayAmountA, swayAmountB) / swayScale;
+
+        swayPosition = Vector3.Lerp(swayPosition, targetposition, Time.smoothDeltaTime * swayLerpSpeed);
+        swayTime += Time.deltaTime;
+
+        if (swayTime > 6.3f)
+        {
+            swayTime = 0;
+        }
+
+        weaponSwayObject.localPosition = swayPosition;
+    }
+
+    private Vector3 LissajousCurve(float Time, float A, float B)
+    {
+        //função que simula um gráfico
+        return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
 }
