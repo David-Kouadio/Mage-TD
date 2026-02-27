@@ -63,6 +63,9 @@ public class scr_PlayerController : MonoBehaviour
     [HideInInspector]
     public bool isFalling;
 
+    [Header("Aiming In ")]
+    public bool isAimingIn;
+
     #region  - Awake -
     private void Awake()
     {
@@ -77,6 +80,9 @@ public class scr_PlayerController : MonoBehaviour
 
         defaultInput.Player.Sprint.performed += e => ToggleSprint();
         defaultInput.Player.SprintRelease.performed += e => StopSprint();
+
+        defaultInput.Weapon.Fire2Pressed.performed += e => AimingInPressed();
+        defaultInput.Weapon.Fire2Released.performed += e => AimingInReleased();
 
         defaultInput.Enable();
 
@@ -105,6 +111,34 @@ public class scr_PlayerController : MonoBehaviour
         CalculateMovement();
         CalculateJump();
         CalculateStance();
+
+        CalculateAimingIn();
+    }
+
+    #endregion
+
+    #region - Aiming In -
+
+    private void AimingInPressed()
+    {
+        isAimingIn = true;
+    }
+
+    private void AimingInReleased()
+    {
+        isAimingIn = false;
+    }
+
+    private void CalculateAimingIn()
+    {
+
+        if (!currentWeapon)
+        {
+            return;
+        }
+
+        currentWeapon.isAimingIn = isAimingIn;
+
     }
 
     #endregion
