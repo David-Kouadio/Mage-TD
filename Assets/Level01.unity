@@ -702,6 +702,7 @@ MonoBehaviour:
   playerSettings:
     ViewXSensitivity: 20
     ViewYSensitivity: 20
+    AimingSensitivityEffector: 0.6
     ViewXInverted: 0
     ViewYInverted: 0
     SprintingHold: 1
@@ -718,6 +719,7 @@ MonoBehaviour:
     CrouchSpeedEffector: 0.6
     ProneSpeedEffector: 0.2
     FallingSpeedEffector: 0.4
+    AimingSpeedEffector: 0.8
     isGroundedRadius: 0.1
     isFallingSpeed: 1
   viewClampYMin: -70
@@ -1744,6 +1746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::scr_WeaponController
   weaponAnimator: {fileID: 1707822265}
+  mainCamera: {fileID: 330585546}
   settings:
     swayAmount: 4
     SwayYInverted: 0
@@ -1760,7 +1763,7 @@ MonoBehaviour:
   weaponSwayObject: {fileID: 18850938}
   swayAmountA: 1
   swayAmountB: 2
-  swayScale: 400
+  swayScale: 5000
   swayLerpSpeed: 14
   sightTarget: {fileID: 1354617713}
   sightOffset: 0.13

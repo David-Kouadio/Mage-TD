@@ -160,10 +160,10 @@ public class scr_PlayerController : MonoBehaviour
     #region  - View/Movement -
     private void CalculateView()
     {
-        newCharacterRotation.y += playerSettings.ViewXSensitivity * (playerSettings.ViewXInverted ? -input_View.x : input_View.x) * Time.deltaTime;
+        newCharacterRotation.y += (isAimingIn ? playerSettings.ViewXSensitivity * playerSettings.AimingSensitivityEffector : playerSettings.ViewXSensitivity) * (playerSettings.ViewXInverted ? -input_View.x : input_View.x) * Time.deltaTime;
         transform.localRotation = Quaternion.Euler(newCharacterRotation);
 
-        newCameraRotation.x += playerSettings.ViewYSensitivity * (playerSettings.ViewYInverted ? input_View.y : -input_View.y) * Time.deltaTime;
+        newCameraRotation.x += (isAimingIn ? playerSettings.ViewYSensitivity * playerSettings.AimingSensitivityEffector : playerSettings.ViewYSensitivity) * (playerSettings.ViewYInverted ? input_View.y : -input_View.y) * Time.deltaTime;
         newCameraRotation.x = Mathf.Clamp(newCameraRotation.x, viewClampYMin, viewClampYMax);
 
 
@@ -201,6 +201,10 @@ public class scr_PlayerController : MonoBehaviour
         else if (playerStance == PlayerStance.Prone)
         {
             playerSettings.SpeedEffector = playerSettings.ProneSpeedEffector;
+        }
+        else if (isAimingIn)
+        {
+            playerSettings.SpeedEffector = playerSettings.AimingSpeedEffector;
         }
         else
         {

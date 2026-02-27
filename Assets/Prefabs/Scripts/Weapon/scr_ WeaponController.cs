@@ -9,6 +9,7 @@ public class scr_WeaponController : MonoBehaviour
 
     [Header("References")]
     public Animator weaponAnimator;
+    public Camera mainCamera;
 
     [Header("Settings")]
     public WeaponSettingsModel settings;
@@ -83,8 +84,9 @@ public class scr_WeaponController : MonoBehaviour
 
         weaponSwayPosition = weaponSwayObject.transform.position;
         weaponSwayPosition = Vector3.SmoothDamp(weaponSwayPosition, targetPosition, ref weaponSwayPositionVelocity, aimingIntime);
-        weaponSwayObject.transform.position = weaponSwayPosition;
-
+        weaponSwayObject.transform.position = weaponSwayPosition + swayPosition;
+        
+        
     }
 
     public void TriggerJump()
@@ -95,18 +97,18 @@ public class scr_WeaponController : MonoBehaviour
 
     private void CalculateWeaponRotation()
     {
-        targetWeaponRotation.y += settings.swayAmount * (settings.SwayXInverted ? -playerController.input_View.x : playerController.input_View.x) * Time.deltaTime;
-        targetWeaponRotation.x += settings.swayAmount * (settings.SwayYInverted ? playerController.input_View.y : -playerController.input_View.y) * Time.deltaTime;
+        targetWeaponRotation.y += (isAimingIn ? settings.swayAmount / 3 : settings.swayAmount) * (settings.SwayXInverted ? -playerController.input_View.x : playerController.input_View.x) * Time.deltaTime;
+        targetWeaponRotation.x += (isAimingIn ? settings.swayAmount / 3 : settings.swayAmount) * (settings.SwayYInverted ? playerController.input_View.y : -playerController.input_View.y) * Time.deltaTime;
         
         targetWeaponRotation.x = Mathf.Clamp(targetWeaponRotation.x, -settings.SwayClampX, settings.SwayClampX);
         targetWeaponRotation.y = Mathf.Clamp(targetWeaponRotation.y, -settings.SwayClampY, settings.SwayClampY);
-        targetWeaponRotation.z = targetWeaponRotation.y;
+        targetWeaponRotation.z = isAimingIn ? 0 : targetWeaponRotation.y;
 
         targetWeaponRotation = Vector3.SmoothDamp(targetWeaponRotation, Vector3.zero, ref targetWeaponRotationVelocity, settings.SwayResetSmoothning);
         newWeaponRotation = Vector3.SmoothDamp(newWeaponRotation, targetWeaponRotation, ref newWeaponRotationVelocity, settings.SwaySmoothning);
 
-        targetWeaponMovementRotation.z = settings.MovementSwayX * (settings.MovementSwayXInverted ? -playerController.input_Movement.x : playerController.input_Movement.x);
-        targetWeaponMovementRotation.x = settings.MovementSwayY * (settings.MovementSwayYInverted ? -playerController.input_Movement.y : playerController.input_Movement.y);
+        targetWeaponMovementRotation.z = (isAimingIn ? settings.MovementSwayX / 3 : settings.MovementSwayX) * (settings.MovementSwayXInverted ? -playerController.input_Movement.x : playerController.input_Movement.x);
+        targetWeaponMovementRotation.x = (isAimingIn ? settings.MovementSwayY / 3 : settings.MovementSwayY) * (settings.MovementSwayYInverted ? -playerController.input_Movement.y : playerController.input_Movement.y);
 
         targetWeaponMovementRotation = Vector3.SmoothDamp(targetWeaponMovementRotation, Vector3.zero, ref targetWeaponMovementRotationVelocity, settings.MovementSwaySmoothning);
         newWeaponMovementRotation = Vector3.SmoothDamp(newWeaponMovementRotation, targetWeaponMovementRotation, ref newWeaponMovementRotationVelocity, settings.MovementSwaySmoothning);
@@ -143,7 +145,7 @@ public class scr_WeaponController : MonoBehaviour
 
     private void CalculateWeaponSway()
     {
-        var targetposition = LissajousCurve(swayTime, swayAmountA, swayAmountB) / swayScale;
+        var targetposition = LissajousCurve(swayTime, swayAmountA, swayAmountB) / (isAimingIn ? swayScale * 4: swayScale);
 
         swayPosition = Vector3.Lerp(swayPosition, targetposition, Time.smoothDeltaTime * swayLerpSpeed);
         swayTime += Time.deltaTime;
@@ -161,4 +163,5 @@ public class scr_WeaponController : MonoBehaviour
         //função que simula um gráfico
         return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
+
 }
