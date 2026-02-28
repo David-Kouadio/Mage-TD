@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,7 +11,8 @@ public class scr_WeaponController : MonoBehaviour
 
     [Header("References")]
     public Animator weaponAnimator;
-    public Camera mainCamera;
+    public GameObject bulletPrefab;
+    public Transform bulletSpawn;
 
     [Header("Settings")]
     public WeaponSettingsModel settings;
@@ -50,15 +53,20 @@ public class scr_WeaponController : MonoBehaviour
     [HideInInspector]
     public bool isAimingIn;
 
+    [Header("Shooting")]
+    public float rateOfFire;
+    private float currentFireRate;
+    public List<WeaponFireType> allowedFireTypes;
+    public WeaponFireType currentFireType;
+    [HideInInspector]
+    public bool isShooting;
+
+    #region - Start / Update - 
     private void Start()
     {
         newWeaponRotation = transform.localRotation.eulerAngles;
-    }
 
-    public void Initialise(scr_PlayerController PlayerController)
-    {
-        playerController = PlayerController;
-        isInitialised = true;
+        currentFireType = allowedFireTypes.First();
     }
     private void Update()
     {
@@ -71,8 +79,45 @@ public class scr_WeaponController : MonoBehaviour
         SetWeaponAnimation();
         CalculateWeaponSway();
         CalculateAimingIn();
+        CalculateShooting();
+    }
+    
+    #endregion
+
+    #region - Shooting - 
+    
+    private void CalculateShooting()
+    {
+        if (isShooting)
+        {
+            Shoot();
+
+            if (currentFireType == WeaponFireType.SemiAuto)
+            {
+                isShooting = false;
+            }
+        }
     }
 
+    private void Shoot()
+    {
+        var bullet = Instantiate(bulletPrefab, bulletSpawn);
+
+        //Carregar as configurações da bala
+    }
+
+    #endregion
+
+    #region - Initialise - 
+        public void Initialise(scr_PlayerController PlayerController)
+    {
+        playerController = PlayerController;
+        isInitialised = true;
+    }
+    
+    #endregion
+
+    #region - Aiming In - 
     private void CalculateAimingIn()
     {
         var targetPosition = transform.position;
@@ -88,13 +133,19 @@ public class scr_WeaponController : MonoBehaviour
         
         
     }
+    
+    #endregion
 
+    #region - Jumping - 
     public void TriggerJump()
     {
         weaponAnimator.SetTrigger("Jump");
         isGroundedTrigger = false;
     }
+    
+    #endregion
 
+    #region - Rotation - 
     private void CalculateWeaponRotation()
     {
         targetWeaponRotation.y += (isAimingIn ? settings.swayAmount / 3 : settings.swayAmount) * (settings.SwayXInverted ? -playerController.input_View.x : playerController.input_View.x) * Time.deltaTime;
@@ -116,7 +167,10 @@ public class scr_WeaponController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(newWeaponRotation + newWeaponMovementRotation);
     }
+    
+    #endregion
 
+    #region - Animation - 
     private void SetWeaponAnimation()
     {
         if (isGroundedTrigger)
@@ -142,7 +196,10 @@ public class scr_WeaponController : MonoBehaviour
         weaponAnimator.SetBool("isSprinting", playerController.isSprinting);
         weaponAnimator.SetFloat("WeaponAnimationSpeed",playerController.weaponAnimatioSpeed);
     }
+    
+    #endregion
 
+    #region - Sway -
     private void CalculateWeaponSway()
     {
         var targetposition = LissajousCurve(swayTime, swayAmountA, swayAmountB) / (isAimingIn ? swayScale * 4: swayScale);
@@ -163,5 +220,5 @@ public class scr_WeaponController : MonoBehaviour
         //função que simula um gráfico
         return new Vector3(Mathf.Sin(Time), A * Mathf.Sin(B * Time + Mathf.PI));
     }
-
+    #endregion
 }

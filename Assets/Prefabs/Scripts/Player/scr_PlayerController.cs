@@ -84,6 +84,10 @@ public class scr_PlayerController : MonoBehaviour
         defaultInput.Weapon.Fire2Pressed.performed += e => AimingInPressed();
         defaultInput.Weapon.Fire2Released.performed += e => AimingInReleased();
 
+        defaultInput.Weapon.Fire1Pressed.performed += e => ShootingPressed();
+        defaultInput.Weapon.Fire1Released.performed += e => ShootingReleased();
+
+
         defaultInput.Enable();
 
         newCameraRotation = cameraHolder.localRotation.eulerAngles;
@@ -113,6 +117,26 @@ public class scr_PlayerController : MonoBehaviour
         CalculateStance();
 
         CalculateAimingIn();
+    }
+
+    #endregion
+
+    #region - Shooting -
+
+    private void ShootingPressed()
+    {
+        if (currentWeapon)
+        {
+            currentWeapon.isShooting = true;
+        }
+    }
+
+    private void ShootingReleased()
+    {
+        if (currentWeapon)
+        {
+            currentWeapon.isShooting = false;
+        }
     }
 
     #endregion

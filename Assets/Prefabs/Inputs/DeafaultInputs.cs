@@ -301,6 +301,24 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire1Pressed"",
+                    ""type"": ""Button"",
+                    ""id"": ""1ba54ac1-33ef-4057-84bb-73fe5188a86f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire1Released"",
+                    ""type"": ""Button"",
+                    ""id"": ""c4f03f25-ec16-485e-9b89-b8913695805c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -325,6 +343,28 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Fire2Released"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""866089d6-1f7e-4f32-a542-0de62779c4e0"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire1Pressed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8df1f033-28fb-46ba-8757-6d7e8637068f"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire1Released"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -344,6 +384,8 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
         m_Weapon = asset.FindActionMap("Weapon", throwIfNotFound: true);
         m_Weapon_Fire2Pressed = m_Weapon.FindAction("Fire2Pressed", throwIfNotFound: true);
         m_Weapon_Fire2Released = m_Weapon.FindAction("Fire2Released", throwIfNotFound: true);
+        m_Weapon_Fire1Pressed = m_Weapon.FindAction("Fire1Pressed", throwIfNotFound: true);
+        m_Weapon_Fire1Released = m_Weapon.FindAction("Fire1Released", throwIfNotFound: true);
     }
 
     ~@DeafaultInputs()
@@ -589,6 +631,8 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
     private List<IWeaponActions> m_WeaponActionsCallbackInterfaces = new List<IWeaponActions>();
     private readonly InputAction m_Weapon_Fire2Pressed;
     private readonly InputAction m_Weapon_Fire2Released;
+    private readonly InputAction m_Weapon_Fire1Pressed;
+    private readonly InputAction m_Weapon_Fire1Released;
     /// <summary>
     /// Provides access to input actions defined in input action map "Weapon".
     /// </summary>
@@ -608,6 +652,14 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Weapon/Fire2Released".
         /// </summary>
         public InputAction @Fire2Released => m_Wrapper.m_Weapon_Fire2Released;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/Fire1Pressed".
+        /// </summary>
+        public InputAction @Fire1Pressed => m_Wrapper.m_Weapon_Fire1Pressed;
+        /// <summary>
+        /// Provides access to the underlying input action "Weapon/Fire1Released".
+        /// </summary>
+        public InputAction @Fire1Released => m_Wrapper.m_Weapon_Fire1Released;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -640,6 +692,12 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
             @Fire2Released.started += instance.OnFire2Released;
             @Fire2Released.performed += instance.OnFire2Released;
             @Fire2Released.canceled += instance.OnFire2Released;
+            @Fire1Pressed.started += instance.OnFire1Pressed;
+            @Fire1Pressed.performed += instance.OnFire1Pressed;
+            @Fire1Pressed.canceled += instance.OnFire1Pressed;
+            @Fire1Released.started += instance.OnFire1Released;
+            @Fire1Released.performed += instance.OnFire1Released;
+            @Fire1Released.canceled += instance.OnFire1Released;
         }
 
         /// <summary>
@@ -657,6 +715,12 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
             @Fire2Released.started -= instance.OnFire2Released;
             @Fire2Released.performed -= instance.OnFire2Released;
             @Fire2Released.canceled -= instance.OnFire2Released;
+            @Fire1Pressed.started -= instance.OnFire1Pressed;
+            @Fire1Pressed.performed -= instance.OnFire1Pressed;
+            @Fire1Pressed.canceled -= instance.OnFire1Pressed;
+            @Fire1Released.started -= instance.OnFire1Released;
+            @Fire1Released.performed -= instance.OnFire1Released;
+            @Fire1Released.canceled -= instance.OnFire1Released;
         }
 
         /// <summary>
@@ -768,5 +832,19 @@ public partial class @DeafaultInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFire2Released(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Fire1Pressed" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFire1Pressed(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Fire1Released" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFire1Released(InputAction.CallbackContext context);
     }
 }
