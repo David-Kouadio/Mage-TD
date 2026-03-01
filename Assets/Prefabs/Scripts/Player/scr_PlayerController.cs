@@ -86,6 +86,9 @@ public class scr_PlayerController : MonoBehaviour
 
         defaultInput.Weapon.Fire1Pressed.performed += e => ShootingPressed();
         defaultInput.Weapon.Fire1Released.performed += e => ShootingReleased();
+        defaultInput.Weapon.Fire1Hold.performed += e => ShootingHold();
+
+        defaultInput.Weapon.Reload.performed += e => Reload();
 
 
         defaultInput.Enable();
@@ -101,6 +104,7 @@ public class scr_PlayerController : MonoBehaviour
         {
             currentWeapon.Initialise(this);
         }
+        
     }
 
     #endregion
@@ -136,7 +140,22 @@ public class scr_PlayerController : MonoBehaviour
         if (currentWeapon)
         {
             currentWeapon.isShooting = false;
+            currentWeapon.isShootingHolding = false;
         }
+    }
+
+    private void ShootingHold()
+    {
+        if (currentWeapon)
+        {
+            currentWeapon.isShooting = true;
+            currentWeapon.isShootingHolding = true;
+        }
+    }
+
+    private void Reload()
+    {
+        currentWeapon.askReload = true;
     }
 
     #endregion

@@ -233,6 +233,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Fire1Hold",
+                    "type": "PassThrough",
+                    "id": "2b8634d6-7f5c-4291-bc03-3016d9ee5594",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "79ea5306-0f97-41c1-b251-ae6d92f20d40",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -277,6 +295,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Fire1Released",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9711df40-47a9-4e38-8fb0-e991ced56b1a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3fc8e19d-b46e-4ff3-9fb5-ef9528d8b8f3",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire1Hold",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
