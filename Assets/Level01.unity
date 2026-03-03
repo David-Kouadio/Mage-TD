@@ -494,7 +494,7 @@ Transform:
   m_GameObject: {fileID: 848337311}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.065, y: 0.22, z: 0}
+  m_LocalPosition: {x: 0.039, y: 0.22, z: 0.239}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1983,18 +1983,20 @@ MonoBehaviour:
   sightOffset: 0.13
   aimingIntime: 0.16
   isAimingIn: 0
+  currentFireType: 1
   allowedFireTypes: 00000000
-  currentFireType: 0
   isShooting: 0
   bullet: {fileID: 5813657691402575386, guid: fed2770cbe71fe94dbb48ead6bd7e00c, type: 3}
   shootForce: 30
   upwardForce: 0
   timeBetweenShooting: 0.1
-  spread: 3
+  spread: 0.3
   reloadTime: 1
   timeBetweenShots: 0
   magazingSize: 100
   bulletsPerTap: 1
+  bulletsLeft: 0
+  bulletsShot: 0
   fpsCam: {fileID: 330585545}
   attackPoint: {fileID: 848337312}
   allowInvoke: 1

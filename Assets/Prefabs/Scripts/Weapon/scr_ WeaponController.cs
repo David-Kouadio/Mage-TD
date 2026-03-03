@@ -55,19 +55,19 @@ public class scr_WeaponController : MonoBehaviour
     public bool isAimingIn;
 
     [Header("Shooting")]
-    [HideInInspector]
-    public List<WeaponFireType> allowedFireTypes;
     public WeaponFireType currentFireType;
     [HideInInspector]
+    public List<WeaponFireType> allowedFireTypes;
+    [HideInInspector]
     public bool isShooting;
-   //balas
+    //balas
     public GameObject bullet;
     //força da bala
     public float shootForce, upwardForce;
     //Status da arma
     public float timeBetweenShooting, spread, reloadTime, timeBetweenShots;
     public int magazingSize, bulletsPerTap;
-    int bulletsLeft, bulletsShot;
+    public int bulletsLeft, bulletsShot;
     //bools
     bool shooting, readyToShoot, reloading;
     //Referencias
@@ -81,6 +81,7 @@ public class scr_WeaponController : MonoBehaviour
     public bool isShootingHolding;
     public int timesShooted;
     public bool askReload;
+
 
 
 
@@ -192,7 +193,7 @@ public class scr_WeaponController : MonoBehaviour
     //currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
         
     bulletsLeft--;
-    bulletsShot--;
+    bulletsShot++;
 
     //Invoca a função de resetar tiro (se já não tiver sido invocada)
     if (allowInvoke)
