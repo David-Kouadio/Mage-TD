@@ -313,7 +313,7 @@
                     "name": "",
                     "id": "3fc8e19d-b46e-4ff3-9fb5-ef9528d8b8f3",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "Hold",
+                    "interactions": "Hold(duration=0.01)",
                     "processors": "",
                     "groups": "",
                     "action": "Fire1Hold",
