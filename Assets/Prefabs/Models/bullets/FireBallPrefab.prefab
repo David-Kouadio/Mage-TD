@@ -256,8 +256,8 @@ MonoBehaviour:
   whatIsEnimies:
     serializedVersion: 2
     m_Bits: 2048
-  bounciness: 1
-  useGravity: 1
+  bounciness: 0
+  useGravity: 0
   explosionDamage: 30
   explosionRange: 0.5
   explosionForce: 1200
