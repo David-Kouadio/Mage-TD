@@ -3,12 +3,10 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     public BaseState activeState;
-    public PatrolState patrolState;
 
     public void Initialise()
     {
-        patrolState = new PatrolState();
-        ChangeState(patrolState);
+        ChangeState(new PatrolState());
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
