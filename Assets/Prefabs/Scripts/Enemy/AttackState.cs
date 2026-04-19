@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class AttackState : BaseState
@@ -6,6 +7,7 @@ public class AttackState : BaseState
     private float moveTimer;
     private float losePlayerTimer;
     private float shotTimer;
+
     public override void Enter()
     {
         
@@ -28,15 +30,6 @@ public class AttackState : BaseState
             //se o temporizador de tiro > cadencia de tiro
             if(shotTimer > enemy.fireRate)
             {
-                //guardar a referencia para o escopo da arma
-                Transform gunbarrel = enemy.gunBarrel;
-
-                //instanciar uma nova bala
-                GameObject bullet = GameObject.Instantiate(Resources.Load("PukekoProjectilePrefab") as GameObject, gunbarrel.position, enemy.transform.rotation);
-                //calcular a direção do player
-                Vector3 shootDirection = (enemy.Player.transform.position - gunbarrel.transform.position).normalized;
-                //adicionar força a bala
-                bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-3f,3f), Vector3.up) * shootDirection * enemy.bulletSpeed; 
                 Shoot();
             }
             //move o inimigo para uma posição aleatoria depois de um tempo aleatorio
@@ -59,6 +52,17 @@ public class AttackState : BaseState
 
     private void Shoot()
     {
+        //Armazenar uma referencia para o escopo
+        Transform gunbarrel = enemy.gunBarrel;
+
+        //instanciar uma nova bala
+        GameObject bullet = GameObject.Instantiate(Resources.Load("Bullets/Enemies/Pukeko/PukekoProjectilePrefab") as GameObject, gunbarrel.position, enemy.transform.rotation);
+
+        //calcular a dirção para o player
+        Vector3 shootDirection = (enemy.Player.transform.position - gunbarrel.transform.position).normalized; 
+
+        //adicionar força para o projetil
+        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-3f,3f),Vector3.up) * shootDirection * enemy.bulletSpeed;
         shotTimer = 0;
     }
 
