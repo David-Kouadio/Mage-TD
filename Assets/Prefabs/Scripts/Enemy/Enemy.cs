@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
     [Range(0.1f,10f)]
     public float fireRate;
     public int bulletSpeed;
+    public int damage;
     //apenas para debug
     [SerializeField]
     private string currentState;    

@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
 {
+    void Start()
+    {
+        //bloquear o cursor do mouse
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     public Camera cam;
     private float xRotation = 0f;
 

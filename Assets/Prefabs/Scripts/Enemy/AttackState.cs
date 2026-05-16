@@ -62,8 +62,8 @@ public class AttackState : BaseState
         //calcular a dirção para o player
         Vector3 shootDirection = (enemy.Player.transform.position - gunbarrel.transform.position).normalized; 
 
-        //adicionar força para o projetil
-        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-3f,3f),Vector3.up) * shootDirection * enemy.bulletSpeed;
+        //adicionar força para o projetil + taxa de erro
+        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-2f,3f),Vector3.up) * shootDirection * enemy.bulletSpeed;
         shotTimer = 0;
     }
 

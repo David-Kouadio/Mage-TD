@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PukekoProjectilePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7cad40ec577e608418d6f1069dfbcf61, type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -76,7 +80,7 @@ PrefabInstance:
       addedObject: {fileID: 4454477550098972036}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7cad40ec577e608418d6f1069dfbcf61, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -2822266951782220962}
+      addedObject: {fileID: 2623073023780311585}
   m_SourcePrefab: {fileID: 100100000, guid: 7cad40ec577e608418d6f1069dfbcf61, type: 3}
 --- !u!1 &1934578718032822182 stripped
 GameObject:
@@ -133,7 +137,7 @@ CapsuleCollider:
   m_Height: 11.2
   m_Direction: 0
   m_Center: {x: -0.91331697, y: 0.11497078, z: 0.059741113}
---- !u!114 &-2822266951782220962
+--- !u!114 &2623073023780311585
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,6 +146,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1934578718032822182}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea37df4640905e04584007185d9bc6c9, type: 3}
+  m_Script: {fileID: 11500000, guid: ea8ca99d6ef164f43ad1b4fe90d299b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
