@@ -9,6 +9,10 @@ TagManager:
   - Ground
   - Interactable
   - Minimap
+  - Wall
+  - ExplosiveTarget
+  - Weapon
+  - Arm View
   layers:
   - Default
   - TransparentFX
