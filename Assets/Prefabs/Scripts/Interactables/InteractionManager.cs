@@ -5,6 +5,7 @@ public class InteractionManager : MonoBehaviour
     public static InteractionManager Instance { get;set; }
     
     public Weapon hoveredWeapon = null;
+    public FireAmmo hoveredFireAmmo = null;
     public Camera playerCam;
     private PlayerInput inputActions;
 
@@ -57,6 +58,27 @@ public class InteractionManager : MonoBehaviour
                 if (hoveredWeapon)
                 {
                     hoveredWeapon.GetComponent<Outline>().enabled = false;
+                }
+            }
+            
+            //FireAmmo
+            if (objectHitByRaycast.GetComponent<FireAmmo>())
+            {
+                
+                hoveredFireAmmo = objectHitByRaycast.gameObject.GetComponent<FireAmmo>();
+                hoveredFireAmmo.GetComponent<Outline>().enabled = true;
+
+                if (inputActions.OnFoot.Interact.triggered)
+                {
+                    WeaponManager.Instance.PickupAmmo(hoveredFireAmmo);
+                    Destroy(objectHitByRaycast.gameObject);
+                }
+            }
+            else
+            {
+                if (hoveredFireAmmo)
+                {
+                    hoveredFireAmmo.GetComponent<Outline>().enabled = false;
                 }
             }
         }

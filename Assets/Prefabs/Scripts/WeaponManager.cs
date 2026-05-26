@@ -9,6 +9,9 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject activeWeaponSlot;
 
+    [Header("Ammo")]
+    public int totalFrierenAmmo = 0;
+
     public Weapon weapon;
     //private int mode;
 
@@ -55,6 +58,33 @@ public class WeaponManager : MonoBehaviour
         weaponslots.GetComponent<Animator>().enabled = true;
         weapon.isActiveWeapon = true;
         
+    }
+
+    internal void PickupAmmo(FireAmmo ammo)
+    {
+        totalFrierenAmmo += ammo.ammoAmout; 
+    }
+
+    internal void DecreaseTotalAmmo(int bulletsToDecrease, Weapon.WeaponModel thisWeaponModel)
+    {
+        switch (thisWeaponModel)
+        {
+            case Weapon.WeaponModel.FrierenStaff:
+                totalFrierenAmmo -= bulletsToDecrease;
+                break;
+        }
+    }
+
+    public int CheckAmmoLeftFor(Weapon.WeaponModel thisWeaponModel)
+    {
+        switch (thisWeaponModel)
+        {
+            case Weapon.WeaponModel.FrierenStaff:
+                return totalFrierenAmmo;
+            
+            default:
+                return 0;
+        }
     }
 
     /*public void SwitchModes (int modeNumber)

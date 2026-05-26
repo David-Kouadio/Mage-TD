@@ -34,7 +34,7 @@ public class Weapon : MonoBehaviour
 
     // Animação
     private Animator animator;
-
+    int a = 0;
     // Carregamento
     public float reloadTime;
     public int magazineSize, bulletsLeft;
@@ -44,6 +44,13 @@ public class Weapon : MonoBehaviour
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
 
+
+    public enum WeaponModel
+    {
+        FrierenStaff
+    }
+
+    public WeaponModel thisWeaponModel;
 
     public enum ShootingMode
     {
@@ -98,13 +105,13 @@ public class Weapon : MonoBehaviour
                 isShooting = inputActions.OnFoot.Shoot.triggered;
             }
 
-            if (inputActions.OnFoot.Reload.triggered && bulletsLeft < magazineSize && isReloading == false)
+            if (inputActions.OnFoot.Reload.triggered && bulletsLeft < magazineSize && isReloading == false && WeaponManager.Instance.CheckAmmoLeftFor(thisWeaponModel) > 0)
             {
                 // recarregar a munição manualmente
                 Reload();
             }
 
-            if(readyToShoot && !isShooting && !isReloading && bulletsLeft <= 0)
+            if(readyToShoot && !isShooting && !isReloading && bulletsLeft <= 0 && WeaponManager.Instance.CheckAmmoLeftFor(thisWeaponModel) > 0)
             {
                 // recarregar automaticamente
                 Reload();
@@ -122,23 +129,29 @@ public class Weapon : MonoBehaviour
                 Reload();
             }
 
-            AmmoManager.Instance.ammo.SetActive(true);
-            AmmoManager.Instance.arm.SetActive(true);
+            HUDManager.Instance.ammo.SetActive(true);
+            HUDManager.Instance.arm.SetActive(true);
+            HUDManager.Instance.deactivated.SetActive(true);
 
-            if(AmmoManager.Instance.ammoDisplay != null)
-            {
-                AmmoManager.Instance.ammoDisplay.text = $"{bulletsLeft/bulletsPerBurst}/{magazineSize/bulletsPerBurst}";
-            }
 
             
 
         }
     }
 
+
+
     private void FireWeapon()
     {
         // diminuir munição
         bulletsLeft--;
+
+        if(a == 0)
+        {
+            animator.Rebind();
+            animator.Update(0f);
+            a++;
+        }
 
         // instanciar animação
         animator.SetTrigger("SHOOTING");
@@ -190,7 +203,17 @@ public class Weapon : MonoBehaviour
 
     private void ReloadCompleted()
     {
-        bulletsLeft = magazineSize;
+        if(WeaponManager.Instance.CheckAmmoLeftFor(thisWeaponModel) > magazineSize)
+        {
+            bulletsLeft = magazineSize;
+            WeaponManager.Instance.DecreaseTotalAmmo(bulletsLeft, thisWeaponModel);
+        }
+        else
+        {
+            bulletsLeft = WeaponManager.Instance.CheckAmmoLeftFor(thisWeaponModel);
+            WeaponManager.Instance.DecreaseTotalAmmo(bulletsLeft, thisWeaponModel);
+        }
+
         isReloading = false;
     }
 
