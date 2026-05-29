@@ -13,7 +13,14 @@ public class HUDManager : MonoBehaviour
     public GameObject ammo;
     public GameObject arm;
     public GameObject deactivated;
+    public GameObject door;
 
+    [Header("PlayerUI")]
+    public GameObject text;
+    public GameObject crosshair;
+    public GameObject HPbar;
+    public GameObject Minimap;
+    public GameObject overlay;
 
     private void Awake()
     {

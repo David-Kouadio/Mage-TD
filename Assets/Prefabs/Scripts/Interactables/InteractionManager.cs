@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class InteractionManager : MonoBehaviour
     
     public Weapon hoveredWeapon = null;
     public FireAmmo hoveredFireAmmo = null;
+    public Teleport hoveredTP = null;
     public Camera playerCam;
     private PlayerInput inputActions;
 
@@ -44,7 +46,12 @@ public class InteractionManager : MonoBehaviour
 
             if (objectHitByRaycast.GetComponent<Weapon>() && objectHitByRaycast.GetComponent<Weapon>().isActiveWeapon == false)
             {
-                
+
+                if (hoveredWeapon)
+                {
+                    hoveredWeapon.GetComponent<Outline>().enabled = false;
+                }
+
                 hoveredWeapon = objectHitByRaycast.gameObject.GetComponent<Weapon>();
                 hoveredWeapon.GetComponent<Outline>().enabled = true;
 
@@ -64,7 +71,11 @@ public class InteractionManager : MonoBehaviour
             //FireAmmo
             if (objectHitByRaycast.GetComponent<FireAmmo>())
             {
-                
+                if (hoveredFireAmmo)
+                {
+                    hoveredFireAmmo.GetComponent<Outline>().enabled = false;
+                }
+
                 hoveredFireAmmo = objectHitByRaycast.gameObject.GetComponent<FireAmmo>();
                 hoveredFireAmmo.GetComponent<Outline>().enabled = true;
 
@@ -79,6 +90,30 @@ public class InteractionManager : MonoBehaviour
                 if (hoveredFireAmmo)
                 {
                     hoveredFireAmmo.GetComponent<Outline>().enabled = false;
+                }
+            }
+
+            //tp
+            if (objectHitByRaycast.GetComponent<Teleport>())
+            {
+                if (hoveredTP)
+                {
+                    hoveredTP.GetComponent<Outline>().enabled = false;
+                }
+
+                hoveredTP = objectHitByRaycast.gameObject.GetComponent<Teleport>();
+                hoveredTP.GetComponent<Outline>().enabled = true;
+
+                if (inputActions.OnFoot.Interact.triggered)
+                {
+                    hoveredTP.StartNewGame(); 
+                }
+            }
+            else
+            {
+                if (hoveredTP)
+                {
+                    hoveredTP.GetComponent<Outline>().enabled = false;
                 }
             }
         }

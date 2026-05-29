@@ -1,11 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
     private float health;
     private float lerpTimer;
+
+    public GameObject gameOverUI;
+
+    public GameObject weapon;
+
+    public bool isDead;
+
     [Header("Health Bar")]
     public float maxHealth = 100;
     public float chipSpeed = 2f;
@@ -77,7 +86,50 @@ public class PlayerHealth : MonoBehaviour
         health -= damage;
         lerpTimer = 0f;
         durationTimer = 0;
-        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0.75f);
+
+        if (health <= 0)
+        {
+            PlayerDead();
+            isDead = true;
+        }
+        else
+        {
+            overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0.75f);
+            SoundManager.Instance.playerChannel.PlayOneShot(SoundManager.Instance.playerHurt);
+        }
+    }
+
+    private void PlayerDead()
+    {
+        SoundManager.Instance.playerChannel.PlayOneShot(SoundManager.Instance.playerDeath);
+
+        SoundManager.Instance.playerChannel.clip = SoundManager.Instance.gameOverMusic;
+        SoundManager.Instance.playerChannel.PlayDelayed(2f);
+
+        GetComponent<PlayerMotor>().enabled = false;
+        GetComponent<PlayerLook>().enabled = false;
+
+        // Dying Animation
+        GetComponentInChildren<Animator>().enabled = true;
+        HUDManager.Instance.ammo.SetActive(false);
+        HUDManager.Instance.text.SetActive(false);
+        HUDManager.Instance.HPbar.SetActive(false);
+        HUDManager.Instance.Minimap.SetActive(false);
+        HUDManager.Instance.crosshair.SetActive(false);
+        HUDManager.Instance.overlay.SetActive(false);
+        
+        weapon.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.None;
+
+        GetComponent<ScreenFader>().StartFade();
+        StartCoroutine(ShowGameOverUI());
+    }
+
+    private IEnumerator ShowGameOverUI()
+    {
+        yield return new WaitForSeconds(1f);
+        gameOverUI.gameObject.SetActive(true);
     }
 
     public void RestoreHealth(float healAmount)
@@ -86,4 +138,16 @@ public class PlayerHealth : MonoBehaviour
         lerpTimer = 0f;
     }
 
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("DamageGround"))
+        {
+            if (!isDead)
+            {
+                TakeDamage(1000);
+            }
+            
+        }
+    }
 }

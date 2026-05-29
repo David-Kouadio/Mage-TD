@@ -13,6 +13,8 @@ TagManager:
   - ExplosiveTarget
   - Weapon
   - Arm View
+  - Waypoints
+  - DamageGround
   layers:
   - Default
   - TransparentFX

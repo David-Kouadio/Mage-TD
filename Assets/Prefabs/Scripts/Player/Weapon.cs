@@ -10,21 +10,27 @@ public class Weapon : MonoBehaviour
 
     // Portar arma
     public bool isActiveWeapon;
+    public int weaponDamage;
 
     public Camera playerCamera;
 
+    [Header("Shooting")]
     //Atirar
     public bool isShooting, readyToShoot;
     bool allowReset = true;
     public float shootingDelay = 2f;
 
+    [Header("Burst")]
     // Rajada
     public int bulletsPerBurst = 3;
     public int burstBulletsLeft;
 
+    [Header("Spread")]
     // Disperção 
     public float spreadIntensity;
+    public float hipSpreadIntensity;
 
+    [Header("Bullet")]
     // Bala
     private PlayerInput inputActions;
     public GameObject bulletPrefab;
@@ -32,17 +38,22 @@ public class Weapon : MonoBehaviour
     public float bulletVelocity = 30;
     public float bulletPrefabLifTime = 3f; 
 
+    [Header("Animation")]
     // Animação
     private Animator animator;
     int a = 0;
+
+    [Header("Reload")]
     // Carregamento
     public float reloadTime;
     public int magazineSize, bulletsLeft;
     public bool isReloading;
 
+    [Header("Get Weapon")]
     // Pegar arma
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
+
 
 
     public enum WeaponModel
@@ -69,6 +80,7 @@ public class Weapon : MonoBehaviour
         inputActions = new PlayerInput();
 
         bulletsLeft = magazineSize;
+        spreadIntensity = hipSpreadIntensity;
     }
 
     private void OnEnable()
@@ -96,8 +108,17 @@ public class Weapon : MonoBehaviour
 
             if (currentShootingMode == ShootingMode.Auto)
             {
-                // Segurar o botao esquerdo do rato
-                isShooting = inputActions.OnFoot.Shoot.IsPressed();
+                
+                if(readyToShoot && !isReloading && bulletsLeft <= 0 && WeaponManager.Instance.CheckAmmoLeftFor(thisWeaponModel) > 0)
+                {
+                    // Recarregar quando estiver sem balas no tiro automatico
+                    Reload();
+                }
+                else
+                {
+                    // Segurar o botao esquerdo do rato
+                    isShooting = inputActions.OnFoot.Shoot.IsPressed();
+                }
             }
             else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
             {
@@ -132,9 +153,7 @@ public class Weapon : MonoBehaviour
             HUDManager.Instance.ammo.SetActive(true);
             HUDManager.Instance.arm.SetActive(true);
             HUDManager.Instance.deactivated.SetActive(true);
-
-
-            
+            HUDManager.Instance.door.GetComponent<Animator>().SetTrigger("isOpen");
 
         }
     }
@@ -165,6 +184,9 @@ public class Weapon : MonoBehaviour
 
         // Instanciar a bala
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity );
+
+        Player_bullet bul = bullet.GetComponent<Player_bullet>();
+        bul.bulletDamage = weaponDamage;
 
         // Apontar a bala para a direção do disparo
         bullet.transform.forward = shootingDirecition;
@@ -243,11 +265,11 @@ public class Weapon : MonoBehaviour
 
         Vector3 direction = targetPoint - bulletSpawn.position;
 
-        float x = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
+        float z = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
         float y = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
 
         // retorna a direção e disperção do tiro
-        return direction + new Vector3 (x,y,0);
+        return direction + new Vector3 (0,y,z);
     }
 
     private IEnumerator DestroyBulletAfterTime(GameObject bullet, float bulletPrefabLifTime)

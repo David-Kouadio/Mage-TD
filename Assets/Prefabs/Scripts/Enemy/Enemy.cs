@@ -1,73 +1,69 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    private StateMachine stateMachine;
-    private NavMeshAgent agent;
-    private GameObject player;
-    private Vector3 lastKnowPos;
-    public NavMeshAgent Agent {get => agent;}
-    public GameObject Player {get => player;}
-    public Vector3 LastKnowPos { get => lastKnowPos; set => lastKnowPos = value; }
+    [SerializeField] private int HP = 100;
+    private Animator animator;
 
-    public Path path;
-    public GameObject debugSphere;
-    [Header("Sight Values")]
-    public float sightDistance = 20f;
-    public float fieldOfView = 85f;
-    public float eyeHeight;
-    [Header("Weapon Values")]
-    public Transform gunBarrel;
-    [Range(0.1f,10f)]
-    public float fireRate;
-    public int bulletSpeed;
-    public int damage;
-    //apenas para debug
-    [SerializeField]
-    private string currentState;    
+    private NavMeshAgent navMeshAgent;
+
+    public bool isDead;
 
     void Start()
     {
-        stateMachine = GetComponent<StateMachine>();
-        agent = GetComponent<NavMeshAgent>();
-        stateMachine.Initialise();
-        player = GameObject.FindGameObjectWithTag("Player");
+        animator = GetComponent<Animator>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void TakeDamage(int damageAmout)
     {
-        CanSeePlayer();
-        currentState = stateMachine.activeState.ToString();
-        debugSphere.transform.position = lastKnowPos;
-    }
-    public bool CanSeePlayer()
-    {
-        if(player != null)
+        HP -= damageAmout;
+
+        if(HP <= 0)
         {
-            //o jogador está perto o suficiente para ser visto?
-            if(Vector3.Distance(transform.position, player.transform.position) < sightDistance)
-            {
-                Vector3 targetDirection = player.transform.position - transform.position - (Vector3.up * eyeHeight);
-                float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
-                if(angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
-                {
-                    Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
-                    RaycastHit hitInfo = new RaycastHit();
-                    if(Physics.Raycast(ray, out hitInfo, sightDistance))
-                    {
-                        if(hitInfo.transform.gameObject == player)
-                        {
-                            Debug.DrawRay(ray.origin, ray.direction * sightDistance);
-                            return true;
-                        }
-                    }
-                    
-                }
+            isDead = true;
 
-            }
+            animator.SetTrigger("DIE1");
+
+            // som de morte
+            SoundManager.Instance.pukekoChannel.PlayOneShot(SoundManager.Instance.pukekoDeath);
+
+            StartCoroutine(HideSelf(0.5f));
         }
-        return false;
+        else
+        {
+            isDead = false;
+
+            animator.SetTrigger("DAMAGE");
+
+            // som de hit
+            SoundManager.Instance.pukekoChannel.PlayOneShot(SoundManager.Instance.pukekoHurt);
+
+        }
+
+
     }
+
+    private IEnumerator HideSelf(float hide)
+    {
+        yield return new WaitForSeconds(hide);
+        gameObject.SetActive(false);
+        
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position,3.5f); // attacking // stop attacking
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position,4f); // Detection
+        
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position,5f); // stop chasing
+    }
+
 }
