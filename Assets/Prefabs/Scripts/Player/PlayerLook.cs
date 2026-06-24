@@ -6,6 +6,11 @@ public class PlayerLook : MonoBehaviour
     {
         //bloquear o cursor do mouse
         Cursor.lockState = CursorLockMode.Locked;
+
+        // Load camera sensitivity on startup, default is 30f
+        float savedSensitivity = PlayerPrefs.GetFloat("CameraSensitivity", 30f);
+        xSensitivity = savedSensitivity;
+        ySensitivity = savedSensitivity;
     }
 
     public Camera cam;

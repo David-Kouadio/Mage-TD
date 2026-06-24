@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -32,6 +33,36 @@ public class PlayerHealth : MonoBehaviour
     {
         health = maxHealth;
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0);
+
+        // Dynamically bind GameOverUI buttons
+        if (gameOverUI != null)
+        {
+            Button btnRes = gameOverUI.transform.Find("BtnRes/Button")?.GetComponent<Button>()
+                           ?? gameOverUI.transform.Find("BtnRes")?.GetComponent<Button>();
+            Button btnVoltar = gameOverUI.transform.Find("BtnVoltar/Button")?.GetComponent<Button>()
+                              ?? gameOverUI.transform.Find("BtnVoltar")?.GetComponent<Button>();
+
+            if (btnRes != null)
+            {
+                btnRes.onClick.AddListener(RestartLevel);
+            }
+            if (btnVoltar != null)
+            {
+                btnVoltar.onClick.AddListener(BackToMainMenu);
+            }
+        }
+    }
+
+    public void RestartLevel()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void BackToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
     void Update()
     {
@@ -121,6 +152,7 @@ public class PlayerHealth : MonoBehaviour
         weapon.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
         GetComponent<ScreenFader>().StartFade();
         StartCoroutine(ShowGameOverUI());
@@ -130,6 +162,22 @@ public class PlayerHealth : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         gameOverUI.gameObject.SetActive(true);
+
+        // Start countdown
+        TextMeshProUGUI timerText = gameOverUI.transform.Find("TimerRes")?.GetComponent<TextMeshProUGUI>();
+        if (timerText != null)
+        {
+            int countdown = 10;
+            while (countdown > 0)
+            {
+                timerText.text = countdown.ToString();
+                yield return new WaitForSeconds(1f);
+                countdown--;
+            }
+            timerText.text = "0";
+            // Auto-respawn/restart
+            RestartLevel();
+        }
     }
 
     public void RestoreHealth(float healAmount)

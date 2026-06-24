@@ -163,6 +163,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Punch"",
+                    ""type"": ""Button"",
+                    ""id"": ""a511e37d-3a58-4681-bf17-b90e67faf362"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -383,6 +392,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9324c9a3-4bd3-486b-8b0e-e06aacb5f92e"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Punch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -917,6 +937,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_Reload = m_OnFoot.FindAction("Reload", throwIfNotFound: true);
         m_OnFoot_Mode = m_OnFoot.FindAction("Mode", throwIfNotFound: true);
         m_OnFoot_Interact1 = m_OnFoot.FindAction("Interact1", throwIfNotFound: true);
+        m_OnFoot_Punch = m_OnFoot.FindAction("Punch", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1018,6 +1039,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Reload;
     private readonly InputAction m_OnFoot_Mode;
     private readonly InputAction m_OnFoot_Interact1;
+    private readonly InputAction m_OnFoot_Punch;
     /// <summary>
     /// Provides access to input actions defined in input action map "OnFoot".
     /// </summary>
@@ -1061,6 +1083,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "OnFoot/Interact1".
         /// </summary>
         public InputAction @Interact1 => m_Wrapper.m_OnFoot_Interact1;
+        /// <summary>
+        /// Provides access to the underlying input action "OnFoot/Punch".
+        /// </summary>
+        public InputAction @Punch => m_Wrapper.m_OnFoot_Punch;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1111,6 +1137,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact1.started += instance.OnInteract1;
             @Interact1.performed += instance.OnInteract1;
             @Interact1.canceled += instance.OnInteract1;
+            @Punch.started += instance.OnPunch;
+            @Punch.performed += instance.OnPunch;
+            @Punch.canceled += instance.OnPunch;
         }
 
         /// <summary>
@@ -1146,6 +1175,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Interact1.started -= instance.OnInteract1;
             @Interact1.performed -= instance.OnInteract1;
             @Interact1.canceled -= instance.OnInteract1;
+            @Punch.started -= instance.OnPunch;
+            @Punch.performed -= instance.OnPunch;
+            @Punch.canceled -= instance.OnPunch;
         }
 
         /// <summary>
@@ -1437,6 +1469,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Punch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPunch(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
