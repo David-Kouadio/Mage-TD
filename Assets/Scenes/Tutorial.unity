@@ -6927,7 +6927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 597c64031417ea84b836db243582c773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  targetPrefab: {fileID: 7605512860314478955, guid: 2e17aac568435764c93c9b8b9f536d5c, type: 3}
+  targetPrefab: {fileID: 6794444430459533213, guid: 25a17b0cd0a76ad4583d1703cd6a003c, type: 3}
   center: {x: -4.826, y: 1, z: 5.144}
   range: {x: 1, y: 0, z: 1}
   respawnDelay: 0.2
