@@ -39,7 +39,7 @@ public class PukekoSpawnController : MonoBehaviour
 
     private IEnumerator SpawnWave()
     {
-        if (currentWave < 1)
+        if (currentWave == 1)
         {
             for(int i = 0; i < currentPukekosPerWave; i++)
             {
